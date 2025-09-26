@@ -5,6 +5,6 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"Hello from Team Autolinium, we are grinding"}
 
 app.include_router(airtable.router)
