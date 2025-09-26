@@ -14,8 +14,8 @@ permissions:
   id-token: write
   contents: read
 
-jobs:erth-showrom-api:
-  build-and-deploy:
+jobs:
+  deploy:
     runs-on: ubuntu-latest
     environment: production
 
@@ -26,7 +26,7 @@ jobs:erth-showrom-api:
       - name: Configure AWS credentials via OIDC
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_IAM_ROLE}}
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
@@ -45,7 +45,4 @@ jobs:erth-showrom-api:
       #   run: |
       #     ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
       #     aws lambda update-function-code \
-      #       --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
-      #       --image-uri $ECR_REGISTRY/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} \
-      #       --region ${{ env.AWS_REGION }} \
-      #       --publish
+      #       --function-name ${{ env.LAMBDA_FU_
