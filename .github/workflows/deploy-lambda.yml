@@ -17,11 +17,6 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    secrets:
-      AWS_IAM_ROLE: ${{ secrets.AWS_IAM_ROLE }}
-      AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }} 
-      AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }} 
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
