@@ -57,13 +57,13 @@ jobs:
 
     # --- CD: Deploy to AWS Lambda ---
     
-    - name: Deploy new image to AWS Lambda
-      run: |
-        ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+    # - name: Deploy new image to AWS Lambda
+    #   run: |
+    #     ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
         
-        # This step updates the Lambda function to use the newly pushed 'latest' image
-        aws lambda update-function-code \
-          --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
-          --image-uri $ECR_REGISTRY/${{ env.ECR_REPOSITORY_NAME }}:latest \
-          --region ${{ env.AWS_REGION }} \
-          --publish
+    #     # This step updates the Lambda function to use the newly pushed 'latest' image
+    #     aws lambda update-function-code \
+    #       --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+    #       --image-uri $ECR_REGISTRY/${{ env.ECR_REPOSITORY_NAME }}:latest \
+    #       --region ${{ env.AWS_REGION }} \
+    #       --publish
