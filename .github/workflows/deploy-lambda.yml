@@ -1,52 +1,34 @@
-name: Build & Deploy FastAPI Container to Lambda
+name: Deploy Lambda Function
 
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
-    # Optional: Recommend using OIDC Role Assumption instead of long-lived keys for better security
-    # permissions:
-    #   id-token: write # Required for OIDC authentication
-    #   contents: read 
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      # Note: This is where you would assume an OIDC role instead of using keys, 
-      # but it works fine with the AWS keys you are using for now.
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: me-central-1
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2 # Correct official action and latest version
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, tag, and push image to ECR
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_NAME }}
-          IMAGE_TAG: ${{ github.sha }} # Immutable tag is excellent practice
-        run: |
-          # 1. Build the image
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          # 2. Push the image to ECR
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+    - name: Build Docker Image
+      run: docker build -t erth-fastapi .
 
-      - name: Update and Publish Lambda Version ✨
-        run: |
-          # The image URI is constructed using the registry output, repository, and git SHA tag.
-          # The --publish flag updates the $LATEST version and then creates a new immutable version.
-          aws lambda update-function-code \
-            --function-name ${{ secrets.LAMBDA_FUNCTION_NAME }} \
-            --image-uri ${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPOSITORY_NAME }}:${{ github.sha }} \
-            --publish
+    - name: Tag Docker Image
+      run: docker tag erth-fastapi:latest ${{ steps.login-ecr.outputs.registry }}/erth-fastapi:latest
+
+    - name: Push Docker Image to ECR
+      run: docker push ${{ steps.login-ecr.outputs.registry }}/erth-fastapi:latest
