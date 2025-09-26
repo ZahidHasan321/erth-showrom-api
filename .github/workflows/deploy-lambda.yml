@@ -5,7 +5,7 @@ on:
     branches: [main]
 
 env:
-  AWS_REGION: me-central-1
+  AWS_REGION: ap-south-1
   ECR_REPOSITORY: fastapi-docker
   LAMBDA_FUNCTION_NAME: fastapi-lambda
   IMAGE_TAG: ${{ github.sha }}
@@ -17,8 +17,6 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: production
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
