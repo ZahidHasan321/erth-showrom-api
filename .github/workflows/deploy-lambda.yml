@@ -6,7 +6,7 @@ on:
 
 env:
   AWS_REGION: ap-south-1
-  ECR_REPOSITORY: fastapi-docker
+  ECR_REPOSITORY: erth-showroom/fastapi-docker
   LAMBDA_FUNCTION_NAME: fastapi-lambda
   IMAGE_TAG: ${{ github.sha }}
 
