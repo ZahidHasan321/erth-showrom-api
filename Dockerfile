@@ -1,5 +1,3 @@
-# Dockerfile
-
 # Use the AWS Lambda Python base image
 FROM public.ecr.aws/lambda/python:3.13
 
@@ -11,6 +9,9 @@ COPY requirements.txt .
 
 # Install Python dependencies. This uses pip from the base image.
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Install the AWS Lambda Runtime Interface Client (RIC)
+RUN pip install awslambdaric
 
 # Copy the rest of your application code
 COPY . .
