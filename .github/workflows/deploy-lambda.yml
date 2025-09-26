@@ -3,11 +3,17 @@ name: Deploy Lambda Function
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    
+    # Define environment variables to centralize values and improve readability
+    env:
+      AWS_REGION: me-central-1
+      ECR_REPOSITORY_NAME: fastapi-docker # The actual repository name part
+      LAMBDA_FUNCTION_NAME: fastapi-lambda # <<-- RENAME THIS!
 
     steps:
     - name: Checkout code
@@ -18,17 +24,46 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: me-central-1
+        aws-region: ${{ env.AWS_REGION }} # Use env variable
 
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
+      
+    # --- CI: Build and Push to ECR ---
 
     - name: Build Docker Image
-      run: docker build -t erth-fastapi .
+      # Tag the image locally with the repository name for consistency
+      run: docker build -t ${{ env.ECR_REPOSITORY_NAME }} .
 
     - name: Tag Docker Image
-      run: docker tag erth-fastapi:latest ${{ steps.login-ecr.outputs.registry }}/erth-fastapi:latest
+      # Tag the image for ECR push using the ECR URI and a unique tag (commit SHA)
+      run: |
+        ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG=${{ github.sha }}
+        
+        # Tag with both 'latest' and the unique SHA for versioning
+        docker tag ${{ env.ECR_REPOSITORY_NAME }}:latest $ECR_REGISTRY/${{ env.ECR_REPOSITORY_NAME }}:latest
+        docker tag ${{ env.ECR_REPOSITORY_NAME }}:latest $ECR_REGISTRY/${{ env.ECR_REPOSITORY_NAME }}:$IMAGE_TAG
 
     - name: Push Docker Image to ECR
-      run: docker push ${{ steps.login-ecr.outputs.registry }}/erth-fastapi:latest
+      run: |
+        ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG=${{ github.sha }}
+        
+        # Push both 'latest' and the unique SHA tag
+        docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY_NAME }}:latest
+        docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY_NAME }}:$IMAGE_TAG
+
+    # --- CD: Deploy to AWS Lambda ---
+    
+    - name: Deploy new image to AWS Lambda
+      run: |
+        ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+        
+        # This step updates the Lambda function to use the newly pushed 'latest' image
+        aws lambda update-function-code \
+          --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+          --image-uri $ECR_REGISTRY/${{ env.ECR_REPOSITORY_NAME }}:latest \
+          --region ${{ env.AWS_REGION }} \
+          --publish
