@@ -1,0 +1,15 @@
+# Python environments
+.venv
+venv/
+
+# Python artifacts
+__pycache__/
+*.pyc
+
+# Docker/Lambda Artifacts
+build/
+*.zip
+
+# Local configuration and logs
+.env
+*.log
