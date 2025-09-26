@@ -1,7 +1,12 @@
 
 from fastapi import FastAPI
 from routers import airtable
+from mangum import Mangum
+
+
 app = FastAPI()
+
+handler = Mangum(app)
 
 @app.get("/")
 def read_root():
