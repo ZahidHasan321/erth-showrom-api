@@ -43,17 +43,29 @@ jobs:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_URI: ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
         run: |
+          FUNCTION_NAME=${{ env.LAMBDA_FUNCTION_NAME }}
+          
           # 1. Update the Lambda function code to use the new ECR image
           echo "Updating function code with new image URI: $IMAGE_URI"
           aws lambda update-function-code \
-            --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
-            --image-uri ${{ env.IMAGE_URI }}
+            --function-name $FUNCTION_NAME \
+            --image-uri $IMAGE_URI
             
-          # 2. Update the Lambda function configuration with the secrets
+          # 🚨 2. WAIT for the code update to complete before proceeding 🚨
+          echo "Waiting for the Lambda code update to finish..."
+          aws lambda wait function-updated --function-name $FUNCTION_NAME
+          echo "Code update complete. Proceeding to configuration update."
+            
+          # 3. Update the Lambda function configuration with the secrets
           echo "Setting application environment variables on Lambda..."
           aws lambda update-function-configuration \
-            --function-name ${{ env.LAMBDA_FUNCTION_NAME }} \
+            --function-name $FUNCTION_NAME \
             --environment '{"Variables":{
               "AIRTABLE_API_KEY": "${{ secrets.AIRTABLE_API_KEY }}",
               "AIRTABLE_BASE_ID": "${{ secrets.AIRTABLE_BASE_ID }}"
               }}'
+          
+          # Optional: Wait again for the configuration update to finish
+          echo "Waiting for the Lambda configuration update to finish..."
+          aws lambda wait function-updated --function-name $FUNCTION_NAME
+          echo "Deployment successful!"
