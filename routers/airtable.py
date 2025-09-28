@@ -1,5 +1,4 @@
-from functools import lru_cache
-from fastapi import Depends, HTTPException, Path, APIRouter, Body
+from fastapi import Depends, HTTPException, Path, APIRouter, Body, Query
 from pyairtable.api.table import Table
 from utility import get_airtable_table_utility
 from dependencies import get_airtable_api, AirtableApi
@@ -100,3 +99,29 @@ def delete_airtable_record(
     except Exception as e:
         print(f"Airtable Delete Error: {e}")
         raise HTTPException(status_code=500, detail=f"Airtable Delete Error: {e}")
+
+
+# --- SEARCH Route ---
+@router.get("/{table_name}/search")
+def search_airtable_record_route(
+    table_name: str = Path(..., description="The name of the Airtable table."),
+    formula: str = Query(..., description="The Airtable formula to use for searching. For example: \"\"Name\" = 'John Doe'\""),
+    api: AirtableApi = Depends(get_airtable_api),
+    settings: Settings = Depends(get_settings),
+):
+    """Searches for a single record in the specified Airtable table using a formula."""
+    try:
+        table = get_airtable_table_utility(
+            table_name=table_name,
+            api=api,
+            settings=settings
+        )
+        record = table.first(formula=formula)
+
+        if not record:
+            raise HTTPException(status_code=404, detail="Record not found")
+
+        return {"status": "success", "record": record}
+    except Exception as e:
+        print(f"Airtable Search Error: {e}")
+        raise HTTPException(status_code=500, detail=f"Airtable Search Error: {e}")
