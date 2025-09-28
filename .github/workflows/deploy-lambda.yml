@@ -51,7 +51,6 @@ jobs:
             --function-name $FUNCTION_NAME \
             --image-uri $IMAGE_URI
             
-          # 🚨 2. WAIT for the code update to complete before proceeding 🚨
           echo "Waiting for the Lambda code update to finish..."
           aws lambda wait function-updated --function-name $FUNCTION_NAME
           echo "Code update complete. Proceeding to configuration update."

@@ -102,15 +102,20 @@ def delete_airtable_record(
 
 
 # --- SEARCH Route ---
-@router.get("/{table_name}/search")
+@router.post("/{table_name}/search")
 def search_airtable_record_route(
     table_name: str = Path(..., description="The name of the Airtable table."),
-    formula: str = Query(..., description="The Airtable formula to use for searching. For example: \"\"Name\" = 'John Doe'\""),
+    search_fields: dict = Body(..., description='A dictionary of fields to search for. For example: {"Name": "John Doe"}'),
     api: AirtableApi = Depends(get_airtable_api),
     settings: Settings = Depends(get_settings),
 ):
-    """Searches for a single record in the specified Airtable table using a formula."""
+    """Searches for a single record in the specified Airtable table using a dictionary of fields."""
     try:
+        formula_parts = []
+        for key, value in search_fields.items():
+            formula_parts.append(f"{{{key}}} = '{value}'")
+        formula = f"AND({', '.join(formula_parts)})"
+
         table = get_airtable_table_utility(
             table_name=table_name,
             api=api,
