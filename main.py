@@ -9,7 +9,7 @@ app = FastAPI()
 handler = Mangum(app)
 
 origins = [
-    "http://localhost:5173", 
+    "*", 
 ]
 
 app.add_middleware(
