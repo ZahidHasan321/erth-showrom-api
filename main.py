@@ -19,6 +19,7 @@ app.add_middleware(
     allow_methods=["*"],              # Allow all standard methods (GET, POST, PUT, DELETE, OPTIONS)
     allow_headers=["*"],              # Allow all headers (Authorization, Content-Type, etc.)
 )
+
 @app.get("/")
 def read_root():
     return {"Hello from Team Autolinium, we are grinding"}

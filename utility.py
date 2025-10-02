@@ -11,6 +11,7 @@ def get_airtable_table_utility(
 ) -> Table:
     """Returns the pyairtable Table object dynamically."""
     try:
+        
         return api.table(settings.AIRTABLE_BASE_ID, table_name)
     except Exception as e:
         raise HTTPException(

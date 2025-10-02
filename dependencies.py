@@ -6,4 +6,7 @@ from functools import lru_cache
 def get_airtable_api() -> AirtableApi:
     settings = get_settings() # Call the singleton function inside
     print("--- Initializing new Airtable API client ---")
-    return AirtableApi(settings.AIRTABLE_API_KEY)
+    api = AirtableApi(settings.AIRTABLE_API_KEY, retry_strategy=True)
+    # base = api.bases(force=True)
+    # print(base) 
+    return api
