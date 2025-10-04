@@ -181,3 +181,29 @@ def upsert_airtable_records(
     except Exception as e:
         print(f"Airtable Upsert Error: {e}")
         raise HTTPException(status_code=500, detail=f"Airtable Upsert Error: {e}")
+ 
+@router.post("/{table_name}/search-all", response_model=ApiResponse)
+def search_airtable_records(
+    table_name: str,
+    search_fields: dict = Body(..., description='{"Name": "John Doe"}'),
+    api: AirtableApi = Depends(get_airtable_api),
+    settings: Settings = Depends(get_settings),
+):
+    try:
+        # Build formula from key/value filters
+        formula_parts = [f"{{{key}}} = '{value}'" for key, value in search_fields.items()]
+        formula = f"AND({', '.join(formula_parts)})" if len(formula_parts) > 1 else formula_parts[0]
+
+        table = get_airtable_table_utility(table_name=table_name, api=api, settings=settings)
+        records = table.all(formula=formula)
+
+        # Just return empty list if no records
+        return ApiResponse(
+            status="success",
+            message=f"Found {len(records)} matching records",
+            data=records,
+            count=len(records)
+        )
+    except Exception as e:
+        print(f"Airtable Search-All Error: {e}")
+        raise HTTPException(status_code=500, detail=f"Airtable Search-All Error: {e}")
