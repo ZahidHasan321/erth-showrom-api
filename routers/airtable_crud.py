@@ -2,26 +2,60 @@ from fastapi import Depends, Path, APIRouter, Body
 from utility import get_airtable_table_utility
 from dependencies import get_airtable_api, AirtableApi
 from config import get_settings, Settings
-from pydantic import BaseModel
-from typing import Any, Optional
+from routers.schemas import RecordSchema, ApiResponse
 from requests.exceptions import HTTPError
 
 
-# --- Request Schema ---
-class RecordSchema(BaseModel):
-    id: str | None = None
-    fields: dict
-
-
-# --- Response Schema ---
-class ApiResponse(BaseModel):
-    status: str
-    message: Optional[str] = None
-    data: Optional[Any] = None
-    count: Optional[int] = None
-
-
 router = APIRouter(prefix="/airtable", tags=["airtable"])
+
+
+@router.get("/schema", response_model=ApiResponse)
+def get_airtable_schema(
+    api: AirtableApi = Depends(get_airtable_api),
+    settings: Settings = Depends(get_settings),
+):
+    """
+    Fetch Airtable schema (tables and fields) for the default base ID
+    defined in config settings.
+    """
+    base_id = settings.AIRTABLE_BASE_ID
+    try:
+        base = api.base(base_id)
+        schema = base.schema()
+        tables = schema.tables
+
+        print(tables)
+        # Extract only column info
+        table_columns = {
+            table["name"]: [
+                {"name": field["name"], "type": field["type"]}
+                for field in table.get("fields", [])
+            ]
+            for table in tables
+        }
+
+        return ApiResponse(
+            status="success",
+            message=f"Fetched columns for {len(tables)} tables",
+            data=table_columns,
+        )
+    except HTTPError as e:
+        try:
+            error_json = e.response.json()
+        except Exception:
+            error_json = {"message": str(e)}
+        return ApiResponse(
+            status="error",
+            message="Airtable Schema Fetch Error",
+            data=error_json,
+        )
+
+    except Exception as e:
+        return ApiResponse(
+            status="error",
+            message="Unexpected server error",
+            data={"error": str(e)},
+        )
 
 
 # --- READ Route ---
@@ -35,7 +69,7 @@ def read_airtable_records(
         table = get_airtable_table_utility(
             table_name=table_name, api=api, settings=settings
         )
-        records = table.all(max_records=10)
+        records = table.all()
         return ApiResponse(
             status="success",
             message=f"Fetched {len(records)} records from {table_name}",
@@ -244,7 +278,6 @@ def search_airtable_record_route(
 
 
 # --- SEARCH-ALL Route (all matching records) ---
-# --- SEARCH-ALL Route (all matching records) ---
 @router.post("/{table_name}/search-all", response_model=ApiResponse)
 def search_airtable_records(
     table_name: str,
@@ -253,24 +286,22 @@ def search_airtable_records(
     settings: Settings = Depends(get_settings),
 ):
     try:
-        # --------------------------------------------
         # Build Airtable formula based on value types
-        # --------------------------------------------
         formula_parts = []
         for key, value in search_fields.items():
             if isinstance(value, bool):
-                # ✅ Checkbox / boolean field
+                # Checkbox / boolean field
                 part = f"{{{key}}}" if value else f"NOT({{{key}}})"
             elif isinstance(value, (int, float)):
-                # ✅ Numeric comparison
+                # Numeric comparison
                 part = f"{{{key}}} = {value}"
             elif isinstance(value, str):
-                # ✅ Exact string match
+                # Exact string match
                 # Escape single quotes inside string values
                 safe_value = value.replace("'", "\\'")
                 part = f"{{{key}}} = '{safe_value}'"
             else:
-                # ⚠️ Fallback for unsupported types
+                # Fallback for unsupported types
                 raise ValueError(
                     f"Unsupported value type for field '{key}': {type(value)}"
                 )
@@ -283,16 +314,14 @@ def search_airtable_records(
             else formula_parts[0]
         )
 
-        # --------------------------------------------
         # Perform Airtable query
-        # --------------------------------------------
         table = get_airtable_table_utility(
             table_name=table_name,
             api=api,
             settings=settings,
         )
 
-        # ✅ Fetch matching records
+        # Fetch matching records
         records = table.all(formula=formula)
 
         return ApiResponse(

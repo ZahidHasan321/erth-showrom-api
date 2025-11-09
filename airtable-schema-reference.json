@@ -1,0 +1,963 @@
+{
+  "description": "This file documents all API types and their corresponding Airtable field types used in the ERTH Showroom application. Generated for reference only - do not include in version control.",
+  "lastUpdated": "2025-11-07",
+  "tables": {
+    "Customer": {
+      "description": "Stores customer information including contact details, address, and preferences",
+      "recordStructure": {
+        "id": {
+          "type": "string",
+          "airtableType": "Record ID (Auto-generated)",
+          "description": "Unique Airtable record identifier"
+        },
+        "createdTime": {
+          "type": "string",
+          "airtableType": "Created Time (Auto-generated)",
+          "description": "Timestamp when record was created"
+        }
+      },
+      "fields": {
+        "id": {
+          "type": "number",
+          "airtableType": "Number",
+          "description": "Internal customer ID number",
+          "required": false
+        },
+        "Phone": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Primary phone number",
+          "required": true
+        },
+        "Name": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Customer full name",
+          "required": true
+        },
+        "NickName": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Customer nickname or preferred name",
+          "required": false
+        },
+        "ArabicName": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Customer name in Arabic",
+          "required": false
+        },
+        "ArabicNickname": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Customer nickname in Arabic",
+          "required": false
+        },
+        "CountryCode": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Country code for primary phone number (e.g., +965)",
+          "required": true
+        },
+        "AlternateCountryCode": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Country code for alternate phone number",
+          "required": false
+        },
+        "AlternateMobile": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Alternate mobile phone number",
+          "required": false
+        },
+        "Whatsapp": {
+          "type": "boolean",
+          "airtableType": "Checkbox",
+          "description": "Primary phone has WhatsApp",
+          "required": false
+        },
+        "Email": {
+          "type": "string",
+          "airtableType": "Email",
+          "description": "Customer email address",
+          "required": false
+        },
+        "Nationality": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Customer nationality",
+          "required": true
+        },
+        "InstaID": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Instagram handle",
+          "required": false
+        },
+        "WhatsappAlt": {
+          "type": "boolean",
+          "airtableType": "Checkbox",
+          "description": "Alternate phone has WhatsApp",
+          "required": false
+        },
+        "City": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Customer city",
+          "required": false
+        },
+        "Block": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Block number in address",
+          "required": false
+        },
+        "Street": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Street name or number",
+          "required": false
+        },
+        "HouseNo": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "House or building number",
+          "required": false
+        },
+        "Area": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Area or district name",
+          "required": false
+        },
+        "AddressNote": {
+          "type": "string",
+          "airtableType": "Long text",
+          "description": "Additional address notes or directions",
+          "required": false
+        },
+        "DOB": {
+          "type": "string",
+          "airtableType": "Date",
+          "description": "Date of birth",
+          "required": false
+        },
+        "AccountType": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Type of customer account",
+          "required": false
+        },
+        "CustomerSegment": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Customer segment or category",
+          "required": false
+        },
+        "Note": {
+          "type": "string",
+          "airtableType": "Long text",
+          "description": "General notes about the customer",
+          "required": false
+        },
+        "Relation": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Customer relationship or reference",
+          "required": false
+        }
+      }
+    },
+    "Order": {
+      "description": "Stores order information including status, payment, pricing, and delivery details",
+      "recordStructure": {
+        "id": {
+          "type": "string",
+          "airtableType": "Record ID (Auto-generated)",
+          "description": "Unique Airtable record identifier"
+        },
+        "createdTime": {
+          "type": "string",
+          "airtableType": "Created Time (Auto-generated)",
+          "description": "Timestamp when record was created"
+        }
+      },
+      "fields": {
+        "OrderID": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Human-readable order ID",
+          "required": false
+        },
+        "Fatoura": {
+          "type": "number",
+          "airtableType": "Number",
+          "description": "Invoice number",
+          "required": false
+        },
+        "CustomerID": {
+          "type": "string[]",
+          "airtableType": "Link to Customer table",
+          "description": "Reference to customer record",
+          "required": false
+        },
+        "OrderDate": {
+          "type": "string",
+          "airtableType": "Date",
+          "description": "Date when order was placed",
+          "required": false
+        },
+        "OrderStatus": {
+          "type": "enum",
+          "airtableType": "Single line text",
+          "description": "Current status of the order",
+          "required": true,
+          "enumValues": ["Pending", "Completed", "Cancelled"]
+        },
+        "Notes": {
+          "type": "string",
+          "airtableType": "Long text",
+          "description": "Additional order notes",
+          "required": false
+        },
+        "Campaigns": {
+          "type": "string[]",
+          "airtableType": "Link to Campaign table",
+          "description": "Associated campaigns or promotions",
+          "required": false
+        },
+        "PaymentType": {
+          "type": "enum",
+          "airtableType": "Single line text",
+          "description": "Method of payment",
+          "required": false,
+          "enumValues": ["k-net", "cash", "link-payment", "installments", "others"]
+        },
+        "PaymentRefNo": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Payment reference number",
+          "required": false
+        },
+        "OrderTaker": {
+          "type": "string[]",
+          "airtableType": "Link to Employee table",
+          "description": "Employee who took the order",
+          "required": false
+        },
+        "HomeDelivery": {
+          "type": "boolean",
+          "airtableType": "Checkbox",
+          "description": "Whether home delivery is requested",
+          "required": false
+        },
+        "OrderType": {
+          "type": "enum",
+          "airtableType": "Single line text",
+          "description": "Type of order (work order or sales order)",
+          "required": false,
+          "enumValues": ["work", "sales"]
+        },
+        "DiscountType": {
+          "type": "enum",
+          "airtableType": "Single line text",
+          "description": "Type of discount applied",
+          "required": false,
+          "enumValues": ["flat", "referral", "loyalty", "byValue"]
+        },
+        "ReferralCode": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Referral or promo code used",
+          "required": false
+        },
+        "DiscountValue": {
+          "type": "number",
+          "airtableType": "Number",
+          "description": "Discount amount or percentage value",
+          "required": false
+        },
+        "FabricCharge": {
+          "type": "number",
+          "airtableType": "Number (Currency)",
+          "description": "Total cost of fabrics",
+          "required": false
+        },
+        "StitchingCharge": {
+          "type": "number",
+          "airtableType": "Number (Currency)",
+          "description": "Stitching/tailoring charges",
+          "required": false
+        },
+        "StyleCharge": {
+          "type": "number",
+          "airtableType": "Number (Currency)",
+          "description": "Additional styling charges",
+          "required": false
+        },
+        "DeliveryCharge": {
+          "type": "number",
+          "airtableType": "Number (Currency)",
+          "description": "Home delivery charges",
+          "required": false
+        },
+        "ShelfCharge": {
+          "type": "number",
+          "airtableType": "Number (Currency)",
+          "description": "Total cost of shelved products",
+          "required": false
+        },
+        "Advance": {
+          "type": "number",
+          "airtableType": "Number (Currency)",
+          "description": "Advance payment received",
+          "required": false
+        },
+        "Paid": {
+          "type": "number",
+          "airtableType": "Number (Currency)",
+          "description": "Total amount paid",
+          "required": false
+        },
+        "Balance": {
+          "type": "number",
+          "airtableType": "Number (Currency)",
+          "description": "Remaining balance to be paid",
+          "required": false
+        },
+        "NumOfFabrics": {
+          "type": "number",
+          "airtableType": "Number",
+          "description": "Number of fabric pieces in order",
+          "required": false
+        }
+      }
+    },
+    "Measurement": {
+      "description": "Stores customer body measurements for custom tailoring",
+      "recordStructure": {
+        "id": {
+          "type": "string",
+          "airtableType": "Record ID (Auto-generated)",
+          "description": "Unique Airtable record identifier"
+        },
+        "createdTime": {
+          "type": "string",
+          "airtableType": "Created Time (Auto-generated)",
+          "description": "Timestamp when record was created"
+        }
+      },
+      "fields": {
+        "CustomerID": {
+          "type": "string[]",
+          "airtableType": "Link to Customer table",
+          "description": "Reference to customer record",
+          "required": true
+        },
+        "MeasurementType": {
+          "type": "enum",
+          "airtableType": "Single line text",
+          "description": "Type of garment measurement",
+          "required": true,
+          "enumValues": ["Body", "Dishdasha"]
+        },
+        "MeasurementID": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Unique measurement identifier",
+          "required": true
+        },
+        "MeasurementReference": {
+          "type": "enum",
+          "airtableType": "Single line text",
+          "description": "Reference season or occasion",
+          "required": true,
+          "enumValues": ["Winter", "Summer", "Eid", "Occasion", "Other"]
+        },
+        "Measurer": {
+          "type": "string[]",
+          "airtableType": "Link to Employee table",
+          "description": "Employee who took measurements",
+          "required": false
+        },
+        "Notes": {
+          "type": "string",
+          "airtableType": "Long text",
+          "description": "Special measurement notes",
+          "required": false
+        },
+        "CollarWidth": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Collar width in cm",
+          "required": false
+        },
+        "CollarHeight": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Collar height in cm",
+          "required": false
+        },
+        "Shoulder": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Shoulder width in cm",
+          "required": false
+        },
+        "Armhole": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Armhole circumference in cm",
+          "required": false
+        },
+        "ArmholeFront": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Armhole front measurement in cm",
+          "required": false
+        },
+        "ArmholeProvision": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Armhole provision/ease in cm (calculated)",
+          "required": false
+        },
+        "ChestUpper": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Upper chest circumference in cm",
+          "required": false
+        },
+        "ChestFull": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Full chest circumference in cm",
+          "required": false
+        },
+        "ChestFront": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Chest front measurement in cm",
+          "required": false
+        },
+        "ChestProvision": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Chest provision/ease in cm (calculated)",
+          "required": false
+        },
+        "Sleeve": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Sleeve length in cm",
+          "required": false
+        },
+        "Elbow": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Elbow circumference in cm",
+          "required": false
+        },
+        "TopPocketLength": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Top pocket length in cm",
+          "required": false
+        },
+        "TopPocketWidth": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Top pocket width in cm",
+          "required": false
+        },
+        "TopPocketDistance": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Top pocket distance from collar in cm",
+          "required": false
+        },
+        "SidePocketLength": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Side pocket length in cm",
+          "required": false
+        },
+        "SidePocketWidth": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Side pocket width in cm",
+          "required": false
+        },
+        "SidePocketDistance": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Side pocket distance from waist in cm",
+          "required": false
+        },
+        "SidePocketOpening": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Side pocket opening size in cm",
+          "required": false
+        },
+        "WaistFull": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Full waist circumference in cm",
+          "required": false
+        },
+        "WaistFront": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Waist front measurement in cm",
+          "required": false
+        },
+        "WaistBack": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Waist back measurement in cm",
+          "required": false
+        },
+        "WaistProvision": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Waist provision/ease in cm (calculated)",
+          "required": false
+        },
+        "LengthFront": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Front garment length in cm",
+          "required": false
+        },
+        "LengthBack": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Back garment length in cm",
+          "required": false
+        },
+        "Bottom": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Bottom hem width in cm",
+          "required": false
+        },
+        "JabzoorLength": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Jabzoor (cuff) length in cm",
+          "required": false
+        },
+        "JabzoorWidth": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Jabzoor (cuff) width in cm",
+          "required": false
+        }
+      }
+    },
+    "Garment": {
+      "description": "Stores fabric selection and style options for each garment piece in an order",
+      "recordStructure": {
+        "id": {
+          "type": "string",
+          "airtableType": "Record ID (Auto-generated)",
+          "description": "Unique Airtable record identifier"
+        },
+        "createdTime": {
+          "type": "string",
+          "airtableType": "Created Time (Auto-generated)",
+          "description": "Timestamp when record was created"
+        }
+      },
+      "fields": {
+        "OrderId": {
+          "type": "string[]",
+          "airtableType": "Link to Order table",
+          "description": "Reference to parent order",
+          "required": false
+        },
+        "Fatoura": {
+          "type": "number",
+          "airtableType": "Number",
+          "description": "Invoice number",
+          "required": false
+        },
+        "GarmentId": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Unique garment identifier within order",
+          "required": false
+        },
+        "Brova": {
+          "type": "boolean",
+          "airtableType": "Checkbox",
+          "description": "Whether garment is Brova style",
+          "required": true
+        },
+        "FabricSource": {
+          "type": "enum",
+          "airtableType": "Single line text",
+          "description": "Source of fabric",
+          "required": true,
+          "enumValues": ["", "In", "Out"]
+        },
+        "FabricId": {
+          "type": "string[]",
+          "airtableType": "Link to Fabric table",
+          "description": "Reference to fabric record (if In source)",
+          "required": false
+        },
+        "ShopName": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Name of external fabric shop (if Out source)",
+          "required": false
+        },
+        "FabricLength": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Length of fabric required in meters",
+          "required": true
+        },
+        "Color": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Fabric color",
+          "required": false
+        },
+        "MeasurementId": {
+          "type": "string[]",
+          "airtableType": "Link to Measurement table",
+          "description": "Reference to measurement record",
+          "required": true
+        },
+        "Express": {
+          "type": "boolean",
+          "airtableType": "Checkbox",
+          "description": "Whether express service requested",
+          "required": false
+        },
+        "DeliveryDate": {
+          "type": "string",
+          "airtableType": "Date",
+          "description": "Expected delivery date",
+          "required": true
+        },
+        "Note": {
+          "type": "string",
+          "airtableType": "Long text",
+          "description": "Fabric selection notes",
+          "required": false
+        },
+        "HomeDelivery": {
+          "type": "boolean",
+          "airtableType": "Checkbox",
+          "description": "Whether home delivery requested",
+          "required": false
+        },
+        "StyleOptionId": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Style option identifier",
+          "required": true
+        },
+        "Style": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Garment style selection",
+          "required": true
+        },
+        "Lines": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Number and type of lines",
+          "required": true
+        },
+        "CollarType": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Type of collar",
+          "required": true
+        },
+        "CollarButton": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Collar button style",
+          "required": true
+        },
+        "SmallTabaggi": {
+          "type": "boolean",
+          "airtableType": "Checkbox",
+          "description": "Whether small tabaggi requested",
+          "required": true
+        },
+        "Jabzour1": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "First jabzour (cuff) option",
+          "required": false
+        },
+        "Jabzour2": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Second jabzour (cuff) option",
+          "required": true
+        },
+        "JabzourThickness": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Thickness of jabzour",
+          "required": false
+        },
+        "SidePocketType": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Type of side pocket",
+          "required": false
+        },
+        "Phone": {
+          "type": "boolean",
+          "airtableType": "Checkbox",
+          "description": "Phone pocket requested",
+          "required": true
+        },
+        "Wallet": {
+          "type": "boolean",
+          "airtableType": "Checkbox",
+          "description": "Wallet pocket requested",
+          "required": true
+        },
+        "FrontPocketType": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Type of front pocket",
+          "required": true
+        },
+        "FrontPocketThickness": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Front pocket thickness",
+          "required": true
+        },
+        "PenHolder": {
+          "type": "boolean",
+          "airtableType": "Checkbox",
+          "description": "Pen holder requested",
+          "required": true
+        },
+        "CuffsType": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Type of cuffs",
+          "required": true
+        },
+        "CuffsThickness": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Cuff thickness",
+          "required": true
+        }
+      }
+    },
+    "Fabric": {
+      "description": "Stores fabric inventory with stock and pricing information",
+      "recordStructure": {
+        "id": {
+          "type": "string",
+          "airtableType": "Record ID (Auto-generated)",
+          "description": "Unique Airtable record identifier"
+        },
+        "createdTime": {
+          "type": "string",
+          "airtableType": "Created Time (Auto-generated)",
+          "description": "Timestamp when record was created"
+        }
+      },
+      "fields": {
+        "Name": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Fabric name or description",
+          "required": true
+        },
+        "Color": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Fabric color",
+          "required": true
+        },
+        "RealStock": {
+          "type": "number",
+          "airtableType": "Number (Decimal)",
+          "description": "Current stock in meters",
+          "required": true
+        },
+        "Code": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Fabric code or SKU",
+          "required": true
+        },
+        "PricePerMeter": {
+          "type": "number",
+          "airtableType": "Number (Currency)",
+          "description": "Price per meter",
+          "required": true
+        }
+      }
+    },
+    "Shelves": {
+      "description": "Stores ready-made products available on shelves for direct sale",
+      "recordStructure": {
+        "id": {
+          "type": "string",
+          "airtableType": "Record ID (Auto-generated)",
+          "description": "Unique Airtable record identifier"
+        }
+      },
+      "fields": {
+        "Type": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Product type or category",
+          "required": true
+        },
+        "Brand": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Product brand name",
+          "required": true
+        },
+        "Stock": {
+          "type": "number",
+          "airtableType": "Number",
+          "description": "Current stock quantity",
+          "required": true
+        },
+        "UnitPrice": {
+          "type": "number",
+          "airtableType": "Number (Currency)",
+          "description": "Price per unit",
+          "required": true
+        }
+      }
+    },
+    "Campaign": {
+      "description": "Stores promotional campaigns and special offers",
+      "recordStructure": {
+        "id": {
+          "type": "string",
+          "airtableType": "Record ID (Auto-generated)",
+          "description": "Unique Airtable record identifier"
+        },
+        "createdTime": {
+          "type": "string",
+          "airtableType": "Created Time (Auto-generated)",
+          "description": "Timestamp when record was created"
+        }
+      },
+      "fields": {
+        "Name": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Campaign name",
+          "required": true
+        },
+        "Active": {
+          "type": "boolean",
+          "airtableType": "Checkbox",
+          "description": "Whether campaign is currently active",
+          "required": false
+        }
+      }
+    },
+    "Employee": {
+      "description": "Stores employee information for order tracking and assignments",
+      "recordStructure": {
+        "id": {
+          "type": "string",
+          "airtableType": "Record ID (Auto-generated)",
+          "description": "Unique Airtable record identifier"
+        },
+        "createdTime": {
+          "type": "string",
+          "airtableType": "Created Time (Auto-generated)",
+          "description": "Timestamp when record was created"
+        }
+      },
+      "fields": {
+        "Name": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Employee name",
+          "required": true
+        }
+      }
+    },
+    "Style": {
+      "description": "Stores style option pricing and stitching information for garment customization",
+      "recordStructure": {
+        "id": {
+          "type": "string",
+          "airtableType": "Record ID (Auto-generated)",
+          "description": "Unique Airtable record identifier"
+        },
+        "createdTime": {
+          "type": "string",
+          "airtableType": "Created Time (Auto-generated)",
+          "description": "Timestamp when record was created"
+        }
+      },
+      "fields": {
+        "Code": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Unique style option code (e.g., COL_JAPANESE, STY_KUWAITI)",
+          "required": true
+        },
+        "Name": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Style option name or description",
+          "required": true
+        },
+        "Type": {
+          "type": "string",
+          "airtableType": "Single line text",
+          "description": "Category of style option (e.g., Collar, Cuff, Jabzour, Style)",
+          "required": true
+        },
+        "RatePerItem": {
+          "type": "number",
+          "airtableType": "Number (Currency)",
+          "description": "Price/cost for this style option",
+          "required": true
+        }
+      }
+    }
+  },
+  "notes": {
+    "airtableFieldTypes": {
+      "Single line text": "For short text, codes, and enum values",
+      "Long text": "For multi-line text and notes",
+      "Number": "For integer values",
+      "Number (Decimal)": "For decimal values like measurements",
+      "Number (Currency)": "For monetary values",
+      "Checkbox": "For boolean values",
+      "Date": "For date values",
+      "Email": "For email addresses with validation",
+      "Link to another record": "For relationships between tables (represented as string[] in API)",
+      "Record ID (Auto-generated)": "Unique identifier automatically generated by Airtable",
+      "Created Time (Auto-generated)": "Timestamp automatically set when record is created"
+    },
+    "conventions": {
+      "fieldNaming": "PascalCase in Airtable, camelCase in TypeScript interfaces",
+      "linkedRecords": "Arrays of record IDs (e.g., CustomerID: string[])",
+      "enums": "Stored as single line text in Airtable",
+      "booleans": "Stored as checkboxes in Airtable",
+      "dates": "Stored as ISO 8601 strings in API responses"
+    }
+  }
+}

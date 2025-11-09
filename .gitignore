@@ -13,3 +13,6 @@ build/
 # Local configuration and logs
 .env
 *.log
+
+# API Documentation (for reference only)
+api-summary.md

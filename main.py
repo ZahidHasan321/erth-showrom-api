@@ -1,6 +1,6 @@
 
 from fastapi import FastAPI
-from routers import airtable
+from routers import airtable_crud, orders
 from mangum import Mangum
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -9,7 +9,7 @@ app = FastAPI()
 handler = Mangum(app)
 
 origins = [
-    "*", 
+    "*",
 ]
 
 app.add_middleware(
@@ -24,4 +24,6 @@ app.add_middleware(
 def read_root():
     return {"Hello from Team Autolinium, we are grinding"}
 
-app.include_router(airtable.router)
+# Include routers
+app.include_router(airtable_crud.router)  # Generic CRUD operations
+app.include_router(orders.router)          # Specialized order operations
